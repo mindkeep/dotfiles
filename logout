@@ -1,0 +1,12 @@
+# ~/.logout: executed by bash(1) when login shell exits.
+
+SHENV_LOG="${SHENV_LOG+$SHENV_LOG\n}.logout in $(date)"
+
+# when leaving the console clear the screen to increase privacy
+
+if [ "$SHLVL" = 1 ]; then
+    [ -x /usr/bin/clear_console ] && /usr/bin/clear_console -q
+fi
+
+SHENV_LOG="${SHENV_LOG+$SHENV_LOG\n}.logout out $(date)"
+# vim: ft=sh

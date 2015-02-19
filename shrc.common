@@ -1,0 +1,77 @@
+# common shell .*shrc code
+
+SHENV_LOG="${SHENV_LOG+$SHENV_LOG\n}.shrc.common in $(date)"
+
+DOTFILES=${DOTFILES:-$HOME}
+
+if [ -x /usr/gnu/share/terminfo/ ]; then
+	export TERMINFO=/usr/gnu/share/terminfo/
+fi
+
+# set xterm to something better, assumes I'm using gnome-terminal
+if [ "$TERM" = xterm ]; then
+	if infocmp xterm-256color >/dev/null 2>&1; then
+		export TERM=xterm-256color
+	elif infocmp xterm-color >/dev/null 2>&1; then
+		export TERM=xterm-color
+	fi
+elif [ "$TERM" = screen ]; then
+	if infocmp screen-256color >/dev/null 2>&1; then
+		export TERM=screen-256color
+	elif infocmp screen-color >/dev/null 2>&1; then
+		export TERM=screen-color
+	fi
+fi
+
+
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    eval "$(dircolors -b)"
+    alias ls='ls --color=auto -F'
+else
+    alias ls='ls -F'
+fi
+
+# test if grep supports color
+if grep --color=auto wat /dev/null 2> /dev/null; then
+    alias grep='grep --color=auto'
+fi
+
+if which less >/dev/null 2>&1; then
+    export PAGER="less"
+fi
+
+if which vim >/dev/null 2>&1; then
+    export EDITOR="vim"
+fi
+
+#set other aliases
+alias cp='cp -p'
+alias scp='scp -p'
+
+#cores
+ulimit -c unlimited
+
+# fix root home
+if [ $(id -u) -eq 0 ]; then
+	export LOGNAME=root
+	export HOME=/root
+	export MAIL=/var/mail/root
+fi
+
+if ! echo $PATH | grep -q $HOME/bin; then
+	if [ -d $HOME/bin ]; then
+		export PATH="$HOME/bin:$PATH"
+	fi
+fi
+
+if [ -f $DOTFILES/.shrc.$(uname -s) ]; then
+	. $DOTFILES/.shrc.$(uname -s)
+fi
+
+if [ -f $DOTFILES/.shrc.local ]; then
+	. $DOTFILES/.shrc.local
+fi
+
+SHENV_LOG="${SHENV_LOG+$SHENV_LOG\n}.shrc.common out $(date)"
+# vim: ft=sh

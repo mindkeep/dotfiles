@@ -1,0 +1,15 @@
+# Xdefaults
+# It seems like most things ignore this these days, but we'll keep
+# it around for now
+
+#XTerm*font:		9x15
+#XTerm*boldfont:		9x15bold
+#XTerm*font:		10x20
+#XTerm*boldfont:		10x20bold
+XTerm*faceSize:		11
+XTerm*foreground:	gray
+XTerm*background:	black
+XTerm*saveLines:	4095
+XTerm*toolBar:		false
+XTerm*scrollBar:	true
+XTerm*geometry:		120x50

@@ -1,0 +1,75 @@
+#
+# screenrc configured for zsh and shmancy status lines
+#
+
+activity "activity in window: %n%f %t at %C %A"
+altscreen on
+autodetach on
+bell_msg "bell in window: %n%f %t at %C %A"
+chdir
+deflogin off
+defmonitor on
+defscrollback 10000
+defutf8 on
+escape ^Aa
+msgwait 3
+#multiuser on
+#sessionname xterm
+#shell -$SHELL
+shell $SHELL
+shelltitle "$ |zsh"
+#bind R screen -t '# |root: zsh' su
+silencewait 60
+startup_message off
+#title "Terminal"
+vbell off
+vbell_msg " *beep* "
+vbellwait 3
+
+#
+# Always show the caption and the hardstatus.  Use the caption to display the
+# list of windows and their flags, and the hardstatus to show the hostname,
+# system load, time of day, and today's date.
+#
+
+caption always
+#caption string "%{= dd} - %n - %= %{+b}%t%{-b} %= - %n - "
+caption string "%{= dd}%?%-Lw%? %{+b}%n%f %t%?(%u)%?%{-b} %?%+Lw%?"
+
+hardstatus on
+hardstatus alwayslastline
+hardstatus string "%{= dd}%{+b}%H%{-b}   %l %= %{+b}%C %A   %M %d, %Y%{-b}"
+
+# Get rid of screen 0
+bind c screen 1
+bind ^c screen 1
+bind 0 select 10
+
+# Create initial window
+screen 1
+
+# Setup what windows are automatically created when the program is started.
+
+#screen -t Terminal 0
+#screen -t bash 1
+
+# Prevent the resizing of the terminal window.
+
+# Change the xterm initialization string from is2=\E[!p\E[?3;4l\E[4l\E>
+# (This fixes the "Aborted because of window size change" konsole symptoms found
+#  in bug #134198)
+#termcapinfo xterm* 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
+
+# From http://www4.cs.fau.de/~jnweiger/screen-faq.html
+# Q: My xterm scrollbar does not work with screen.
+# A: The problem is that xterm will not allow scrolling if the alternate text
+# buffer is selected. The standard definitions of the termcap initialize
+# capabilities ti and te switch to and from the alternate text buffer. (The
+# scrollbar also does not work when you start e.g. ‘vi’). You can tell
+# screen not to use these initialisations by adding the line “termcapinfo
+# xterm ti@:te@” to your ~/.screenrc file. 
+termcapinfo xterm ti@:te@
+
+# color please?
+term screen-256color
+
