@@ -19,27 +19,38 @@ set bs=2
 
 syntax on
 
-"remove textwidth for mail, man this pissed me off for a while...
+"remove textwidth for mail
 autocmd Filetype mail setlocal tw=0
-
-au BufRead,BufNewFile *.part setlocal filetype=php
-"au Syntax tin runtime! syntax/tintin.vim
-au Syntax tin runtime! syntax/tt.vim
-au BufRead,BufNewFile *.tin setlocal filetype=tintin
-au BufRead,BufNewFile *.rem setlocal filetype=remind
 
 autocmd BufRead * if &readonly | setlocal number | endif
 
-"autocmd Filetype c,cpp,java,html,perl,php,python,sh,tintin,xhtml if has('syntax_items') && !has('gui_running')|set nospell|endif
-autocmd Filetype c,cpp,java,html,perl,php,python,sh,tintin,xhtml setlocal autoindent
-autocmd Filetype c,cpp,java,html,perl,php,python,sh,tintin,xhtml match ErrorMsg '\%>79v.\+'
+"
+" previously this line was used to disable spell check for cli, but the color
+" schemes handle cli better now
+"
+
+"autocmd Filetype c,cpp,java,html,perl,php,python,sh,xhtml if has('syntax_items') && !has('gui_running')|set nospell|endif
+
+" Some general code ease of use settings
+autocmd Filetype c,cpp,java,html,perl,php,python,sh,xhtml setlocal autoindent
 autocmd Filetype c,cpp,java setlocal smartindent
 autocmd Filetype c,cpp,java setlocal cindent
+autocmd Filetype c,cpp,java setlocal shiftwidth=4
+autocmd Filetype c,cpp,java setlocal tabstop=4
+autocmd Filetype c,cpp setlocal expandtab
+autocmd Filetype java setlocal noexpandtab
 
-"wow.. what a PITA, never touch this!
+" set some extra syntax highlighting?
+autocmd Filetype c,cpp,java,html,perl,php,python,sh,xhtml syn match LongLine '\%>79v.\+'
+autocmd Filetype c,cpp,java,html,perl,php,python,sh,xhtml syn match ExtraWhitespace '\s\+$'
+autocmd Filetype c,cpp,java,html,perl,php,python,sh,xhtml highlight LongLine ctermbg=red guibg=red
+autocmd Filetype c,cpp,java,html,perl,php,python,sh,xhtml highlight ExtraWhitespace ctermbg=red guibg=red
+"autocmd Filetype c,cpp,java,html,perl,php,python,sh,xhtml match ErrorMsg '\%>79v.\+'
+"
 autocmd Filetype python setlocal smarttab
 autocmd Filetype python setlocal expandtab
-autocmd Filetype python setlocal sw=4
+autocmd Filetype python setlocal shiftwidth=4
+autocmd Filetype python setlocal tabstop=4
 autocmd Filetype python setlocal smartindent
 autocmd Filetype python setlocal cinwords=dummy,if,elif,else,for,while,try,except,finally,def,class
 autocmd Filetype python setlocal indentkeys-=0#
