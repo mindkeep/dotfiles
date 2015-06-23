@@ -35,6 +35,7 @@ autocmd BufRead * if &readonly | setlocal number | endif
 autocmd Filetype c,cpp,java,html,perl,php,python,sh,xhtml setlocal autoindent
 autocmd Filetype c,cpp,java setlocal smartindent
 autocmd Filetype c,cpp,java setlocal cindent
+autocmd Filetype c,cpp,java setlocal cinoptions=N-s,g0,t0
 autocmd Filetype c,cpp,java setlocal shiftwidth=4
 autocmd Filetype c,cpp,java setlocal tabstop=4
 autocmd Filetype c,cpp setlocal expandtab
