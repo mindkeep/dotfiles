@@ -45,9 +45,19 @@ if which vim >/dev/null 2>&1; then
     export EDITOR="vim"
 fi
 
+# set locale
+export LANG=en_US.UTF-8
+export LANGUAGE=$LANG
+export LC_ALL=$LANG
+
 #set other aliases
 alias cp='cp -p'
 alias scp='scp -p'
+
+# these are especially important to have available
+# http://emojicons.com/table-flipping
+alias table="echo -e '(╯°□°)╯︵ ┻━┻'"
+alias untable="echo -e '┬─┬ノ(°-°ノ)'"
 
 #cores
 ulimit -c unlimited
