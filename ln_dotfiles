@@ -1,10 +1,15 @@
 #!/bin/sh
 
-cd $HOME
+# small utility to establish relative paths to the dotfiles/src/.* files
+# DOTFILES_SRC may be set to accomodate alternate locations
 
-DOTFILES_SRC=${DOTFILES_SRC:-"$HOME/dotfiles/src"}
+
+cd
+
+DOTFILES_SRC=${DOTFILES_SRC:-"dotfiles/src"}
 
 for file in $DOTFILES_SRC/.[a-zA-Z]*; do
 	dfile="$(basename $file)"
-	rm -rf $dfile; ln -s $file $dfile
+	rm -rf $dfile
+	ln -s $file $dfile
 done
