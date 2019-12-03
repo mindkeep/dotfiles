@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# small utility to copy dotfiles/src/.* files to ~
+# DOTFILES_SRC may be set to accommodate alternate locations
+
+cd
+
+DOTFILES_SRC=${DOTFILES_SRC:-"dotfiles/src"}
+
+for file in $DOTFILES_SRC/.[a-zA-Z]*; do
+	dfile="$(basename $file)"
+	rm -rf $dfile
+	cp -rp $file $dfile
+done
