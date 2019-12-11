@@ -104,7 +104,7 @@ function title() {
                         print -Pn "\ek$a\e\\"      # screen title (in ^A")
                         print -Pn "\e_$2   \e\\"   # screen location
                         ;;
-                xterm*)
+                xterm*|putty*)
                         print -Pn "\e]2;$a @ $2\a" # plain xterm title
                         ;;
         esac
@@ -137,25 +137,24 @@ autoload -Uz vcs_info
 #zstyle ':vcs_info:(hg*|git*):*' get-revision true
 #zstyle ':vcs_info:(hg*|git*):*' check-for-changes true
 
-# rev+changes branch misc
-zstyle ':vcs_info:hg*' formats " (%s)[%b%u%m]"
-zstyle ':vcs_info:hg*' actionformats " (%s|%a)%b%u%m]"
-zstyle ':vcs_info:hg*' use-simple true
+#zstyle ':vcs_info:hg*' use-simple false
+zstyle ':vcs_info:(hg*|git*):*' get-revision true
+zstyle ':vcs_info:(hg*|git*):*' check-for-changes true
+zstyle ':vcs_info:(hg*|git*):*' unstagedstr "+"
 
-# hash changes branch misc
-zstyle ':vcs_info:git*' formats " (%s)[%b%u%m]"
-zstyle ':vcs_info:git*' actionformats " (%s|%a)[%b%u%m]"
+# rev+changes branch misc
+zstyle ':vcs_info:(hg*|git*)' formats " (%s)[%b:%m]%u"
+zstyle ':vcs_info:(hg*|git*)' actionformats " (%s|%a)[%b:%m]%u"
 
 zstyle ':vcs_info:hg*:*' get-bookmarks true
-
 zstyle ':vcs_info:hg*:*' get-mq true
 zstyle ':vcs_info:hg*:*' get-unapplied true
+
 zstyle ':vcs_info:hg*:*' patch-format " mq(%n/%c):%p"
 zstyle ':vcs_info:hg*:*' nopatch-format " mq(%n/%c):%p"
 
-zstyle ':vcs_info:hg*:*' unstagedstr "+"
 zstyle ':vcs_info:hg*:*' hgrevformat "%r" # only show local rev.
-zstyle ':vcs_info:hg*:*' branchformat "%b" # only show branch
+zstyle ':vcs_info:hg*:*' branchformat "%b:%r" # only show branch
 
 setup_prompt
 setup_keys
