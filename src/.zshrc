@@ -104,7 +104,7 @@ function title() {
                         print -Pn "\ek$a\e\\"      # screen title (in ^A")
                         print -Pn "\e_$2   \e\\"   # screen location
                         ;;
-                xterm*)
+                xterm*|putty*)
                         print -Pn "\e]2;$a @ $2\a" # plain xterm title
                         ;;
         esac
