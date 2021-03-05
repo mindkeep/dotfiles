@@ -32,7 +32,16 @@ autocmd BufRead * if &readonly | setlocal number | endif
 "autocmd Filetype c,cpp,java,html,perl,php,python,sh,xhtml if has('syntax_items') && !has('gui_running')|set nospell|endif
 
 " Some general code ease of use settings
-autocmd Filetype c,cpp,java,html,perl,php,python,sh,xhtml setlocal autoindent
+autocmd Filetype c,cpp,java,html,perl,php,python,ruby,sh,xhtml,yaml setlocal autoindent
+
+" set some extra syntax highlighting?
+autocmd Filetype c,cpp,java,html,perl,php,python,ruby,sh,xhtml,yaml syn match LongLine '\%>79v.\+'
+autocmd Filetype c,cpp,java,html,perl,php,python,ruby,sh,xhtml,yaml syn match ExtraWhitespace '\s\+$'
+autocmd Filetype c,cpp,java,html,perl,php,python,ruby,sh,xhtml,yaml highlight LongLine ctermbg=red guibg=red
+autocmd Filetype c,cpp,java,html,perl,php,python,ruby,sh,xhtml,yaml highlight ExtraWhitespace ctermbg=red guibg=red
+"autocmd Filetype c,cpp,java,html,perl,php,python,ruby,sh,xhtml match ErrorMsg '\%>79v.\+'
+"
+
 autocmd Filetype c,cpp,java setlocal smartindent
 autocmd Filetype c,cpp,java setlocal cindent
 autocmd Filetype c,cpp,java setlocal cinoptions=N-s,g0,t0
@@ -41,23 +50,18 @@ autocmd Filetype c,cpp,java setlocal tabstop=4
 autocmd Filetype c,cpp setlocal expandtab
 autocmd Filetype java setlocal noexpandtab
 
-" set some extra syntax highlighting?
-autocmd Filetype c,cpp,java,html,perl,php,python,sh,xhtml syn match LongLine '\%>79v.\+'
-autocmd Filetype c,cpp,java,html,perl,php,python,sh,xhtml syn match ExtraWhitespace '\s\+$'
-autocmd Filetype c,cpp,java,html,perl,php,python,sh,xhtml highlight LongLine ctermbg=red guibg=red
-autocmd Filetype c,cpp,java,html,perl,php,python,sh,xhtml highlight ExtraWhitespace ctermbg=red guibg=red
-"autocmd Filetype c,cpp,java,html,perl,php,python,sh,xhtml match ErrorMsg '\%>79v.\+'
-"
-autocmd Filetype python setlocal smarttab
-autocmd Filetype python setlocal expandtab
-autocmd Filetype python setlocal shiftwidth=4
-autocmd Filetype python setlocal tabstop=4
-autocmd Filetype python setlocal smartindent
+autocmd Filetype python,ruby,yaml setlocal smarttab
+autocmd Filetype python,ruby,yaml setlocal expandtab
+autocmd Filetype python,ruby,yaml setlocal smartindent
+autocmd Filetype python,ruby,yaml setlocal shiftwidth=4
+autocmd Filetype python,ruby,yaml setlocal tabstop=4
+
 autocmd Filetype python setlocal cinwords=dummy,if,elif,else,for,while,try,except,finally,def,class
 autocmd Filetype python setlocal indentkeys-=0#
 autocmd Filetype python setlocal cinkeys-=0#
 autocmd Filetype python inoremap # X#
 autocmd Filetype python let python_highlight_all = 1
+
 
 "minibufexplorer
 "let g:miniBufExplMapWindowNavVim = 1
