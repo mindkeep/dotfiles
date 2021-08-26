@@ -50,11 +50,11 @@ autocmd Filetype c,cpp,java setlocal tabstop=4
 autocmd Filetype c,cpp setlocal expandtab
 autocmd Filetype java setlocal noexpandtab
 
-autocmd Filetype python,ruby,yaml setlocal smarttab
-autocmd Filetype python,ruby,yaml setlocal expandtab
-autocmd Filetype python,ruby,yaml setlocal smartindent
-autocmd Filetype python,ruby,yaml setlocal shiftwidth=2
-autocmd Filetype python,ruby,yaml setlocal tabstop=2
+autocmd Filetype python,ruby,sh,yaml setlocal smarttab
+autocmd Filetype python,ruby,sh,yaml setlocal expandtab
+autocmd Filetype python,ruby,sh,yaml setlocal smartindent
+autocmd Filetype python,ruby,sh,yaml setlocal shiftwidth=2
+autocmd Filetype python,ruby,sh,yaml setlocal tabstop=2
 
 autocmd Filetype python setlocal cinwords=dummy,if,elif,else,for,while,try,except,finally,def,class
 autocmd Filetype python setlocal indentkeys-=0#
