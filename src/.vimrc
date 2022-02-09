@@ -32,29 +32,29 @@ autocmd BufRead * if &readonly | setlocal number | endif
 "autocmd Filetype c,cpp,java,html,perl,php,python,sh,xhtml if has('syntax_items') && !has('gui_running')|set nospell|endif
 
 " Some general code ease of use settings
-autocmd Filetype c,cpp,java,html,perl,php,python,ruby,sh,xhtml,yaml setlocal autoindent
+autocmd Filetype c,cpp,go,java,html,perl,php,python,ruby,sh,xhtml,yaml setlocal autoindent
 
 " set some extra syntax highlighting?
-autocmd Filetype c,cpp,java,html,perl,php,python,ruby,sh,xhtml,yaml syn match LongLine '\%>79v.\+'
-autocmd Filetype c,cpp,java,html,perl,php,python,ruby,sh,xhtml,yaml syn match ExtraWhitespace '\s\+$'
-autocmd Filetype c,cpp,java,html,perl,php,python,ruby,sh,xhtml,yaml highlight LongLine ctermbg=red guibg=red
-autocmd Filetype c,cpp,java,html,perl,php,python,ruby,sh,xhtml,yaml highlight ExtraWhitespace ctermbg=red guibg=red
-"autocmd Filetype c,cpp,java,html,perl,php,python,ruby,sh,xhtml match ErrorMsg '\%>79v.\+'
+"autocmd Filetype c,cpp,go,java,html,perl,php,python,ruby,sh,xhtml,yaml syn match LongLine '\%>79v.\+'
+autocmd Filetype c,cpp,go,java,html,perl,php,python,ruby,sh,xhtml,yaml syn match ExtraWhitespace '\s\+$'
+"autocmd Filetype c,cpp,go,java,html,perl,php,python,ruby,sh,xhtml,yaml highlight LongLine ctermbg=red guibg=red
+autocmd Filetype c,cpp,go,java,html,perl,php,python,ruby,sh,xhtml,yaml highlight ExtraWhitespace ctermbg=red guibg=red
+"autocmd Filetype c,cpp,go,java,html,perl,php,python,ruby,sh,xhtml match ErrorMsg '\%>79v.\+'
 "
 
-autocmd Filetype c,cpp,java setlocal smartindent
+autocmd Filetype c,cpp,go,java setlocal smartindent
+autocmd Filetype c,cpp,go,java setlocal shiftwidth=4
+autocmd Filetype c,cpp,go,java setlocal tabstop=4
 autocmd Filetype c,cpp,java setlocal cindent
 autocmd Filetype c,cpp,java setlocal cinoptions=N-s,g0,t0
-autocmd Filetype c,cpp,java setlocal shiftwidth=4
-autocmd Filetype c,cpp,java setlocal tabstop=4
 autocmd Filetype c,cpp setlocal expandtab
-autocmd Filetype java setlocal noexpandtab
+autocmd Filetype go,java setlocal noexpandtab
 
+autocmd Filetype python,ruby,sh,yaml setlocal shiftwidth=2
+autocmd Filetype python,ruby,sh,yaml setlocal tabstop=2
 autocmd Filetype python,ruby,sh,yaml setlocal smarttab
 autocmd Filetype python,ruby,sh,yaml setlocal expandtab
 autocmd Filetype python,ruby,sh,yaml setlocal smartindent
-autocmd Filetype python,ruby,sh,yaml setlocal shiftwidth=2
-autocmd Filetype python,ruby,sh,yaml setlocal tabstop=2
 
 autocmd Filetype python setlocal cinwords=dummy,if,elif,else,for,while,try,except,finally,def,class
 autocmd Filetype python setlocal indentkeys-=0#

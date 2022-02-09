@@ -69,17 +69,15 @@ if [ $(id -u) -eq 0 ]; then
   export MAIL=/var/mail/root
 fi
 
-if ! echo $PATH | grep -q $HOME/.local/bin; then
-  if [ -d $HOME/.local/bin ]; then
-    export PATH="$HOME/.local/bin:$PATH"
+# Add user paths in reverse priority order
+for _binpath in $HOME/go/bin $HOME/.local/bin $HOME/bin; do
+  if ! echo $PATH | grep -q $_binpath; then
+    if [ -d $_binpath ]; then
+      export PATH="$_binpath:$PATH"
+    fi
   fi
-fi
-
-if ! echo $PATH | grep -q $HOME/bin; then
-  if [ -d $HOME/bin ]; then
-    export PATH="$HOME/bin:$PATH"
-  fi
-fi
+done
+unset _binpath
 
 if [ -f $DOTFILES/.shrc.$(uname -s) ]; then
   . $DOTFILES/.shrc.$(uname -s)
