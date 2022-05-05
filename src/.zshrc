@@ -133,9 +133,8 @@ function TRAPINT() {
 #http://zsh.sourceforge.net/Doc/Release/User-Contributions.html#Version-Control-Information
 #http://eseth.org/2010/hg-in-zsh.html
 autoload -Uz vcs_info
-#zstyle ':vcs_info:*' enable hg git bzr svn
-#zstyle ':vcs_info:(hg*|git*):*' get-revision true
-#zstyle ':vcs_info:(hg*|git*):*' check-for-changes true
+zstyle ':vcs_info:*' enable hg git
+zstyle ':vcs_info:*' disable p4
 
 #zstyle ':vcs_info:hg*' use-simple false
 zstyle ':vcs_info:(hg*|git*):*' get-revision true
