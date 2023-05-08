@@ -5,55 +5,58 @@ SHENV_LOG="${SHENV_LOG+$SHENV_LOG\n}.shrc.common in $(date)"
 DOTFILES=${DOTFILES:-$HOME}
 
 if [ -x /usr/gnu/share/terminfo/ ]; then
-  export TERMINFO=/usr/gnu/share/terminfo/
+	export TERMINFO=/usr/gnu/share/terminfo/
 fi
 
 # set xterm to something better, assumes I'm using gnome-terminal
 if [ "$TERM" = xterm ]; then
-  if infocmp xterm-256color >/dev/null 2>&1; then
-    export TERM=xterm-256color
-  elif infocmp xterm-color >/dev/null 2>&1; then
-    export TERM=xterm-color
-  fi
+	if infocmp xterm-256color >/dev/null 2>&1; then
+		export TERM=xterm-256color
+	elif infocmp xterm-color >/dev/null 2>&1; then
+		export TERM=xterm-color
+	fi
 elif [ "$TERM" = screen ]; then
-  if infocmp screen-256color >/dev/null 2>&1; then
-    export TERM=screen-256color
-  elif infocmp screen-color >/dev/null 2>&1; then
-    export TERM=screen-color
-  fi
+	if infocmp screen-256color >/dev/null 2>&1; then
+		export TERM=screen-256color
+	elif infocmp screen-color >/dev/null 2>&1; then
+		export TERM=screen-color
+	fi
 fi
-
 
 alias ls='ls -F'
 # enable color support
 if which dircolors >/dev/null 2>&1; then
-  eval "$(dircolors -b)"
+	eval "$(dircolors -b)"
 
-  # test color support of ls and add aliases
-  if ls --color=auto >/dev/null 2>&1; then
-    alias ls='ls --color=auto -F'
-  fi
+	# test color support of ls and add aliases
+	if ls --color=auto >/dev/null 2>&1; then
+		alias ls='ls --color=auto -F'
+	fi
 fi
 
 # test if grep supports color
-if grep --color=auto wat /dev/null 2&>1; then
-  alias grep='grep --color=auto'
+if grep --color=auto wat /dev/null 2 &>1; then
+	alias grep='grep --color=auto'
 fi
 
 if which less >/dev/null 2>&1; then
-  export PAGER="less"
+	export PAGER="less"
 fi
 
+# if neovim is available, let's use that over regular vim
 if which nvim >/dev/null 2>&1; then
-  export EDITOR="nvim"
-  alias vim='nvim'
-  alias vimdiff='nvim -d'
+	export EDITOR="nvim"
+	alias vim="nvim"
+	alias vimdiff="nvim -d"
+	alias nvimdiff="nvim -d"
 elif which vim >/dev/null 2>&1; then
-  export EDITOR="vim"
+	export EDITOR="vim"
+elif which vi >/dev/null 2>&1; then
+	export EDITOR="vi"
 fi
 
 if [ -f ~/.hosts ]; then
-  export HOSTALIASES="~/.hosts"
+	export HOSTALIASES="~/.hosts"
 fi
 
 # set locale
@@ -75,27 +78,27 @@ ulimit -c unlimited
 
 # fix root home
 if [ $(id -u) -eq 0 ]; then
-  export LOGNAME=root
-  export HOME=/root
-  export MAIL=/var/mail/root
+	export LOGNAME=root
+	export HOME=/root
+	export MAIL=/var/mail/root
 fi
 
 # Add user paths in reverse priority order
 for _binpath in $HOME/go/bin $HOME/.dotnet/tools $HOME/.local/bin $HOME/bin; do
-  if ! echo $PATH | grep -q $_binpath; then
-    if [ -d $_binpath ]; then
-      export PATH="$_binpath:$PATH"
-    fi
-  fi
+	if ! echo $PATH | grep -q $_binpath; then
+		if [ -d $_binpath ]; then
+			export PATH="$_binpath:$PATH"
+		fi
+	fi
 done
 unset _binpath
 
 if [ -f $DOTFILES/.shrc.$(uname -s) ]; then
-  . $DOTFILES/.shrc.$(uname -s)
+	. $DOTFILES/.shrc.$(uname -s)
 fi
 
 if [ -f $DOTFILES/.shrc.local ]; then
-  . $DOTFILES/.shrc.local
+	. $DOTFILES/.shrc.local
 fi
 
 SHENV_LOG="${SHENV_LOG+$SHENV_LOG\n}.shrc.common out $(date)"
