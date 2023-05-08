@@ -13,12 +13,15 @@ if [[ "$-" == *i* ]]; then
   if [[ -n ${REALLY_USE_BASH+xxx} ]]; then
     echo "oh fine, we'll REALLY_USE_BASH"
   # bash is nice, but zsh is where want to be...
-  elif [[ -f /bin/zsh ]]; then
-    echo "switching to zsh -l"
-    export SHELL=/bin/zsh
-    exec /bin/zsh -l
   else
-    echo "/bin/zsh not found!!!!!!!!!!"
+    ZSH=$(which zsh)
+    if [[ -n "${ZSH}" ]]; then
+      echo "switching to zsh -l"
+      export SHELL=${ZSH}
+      exec ${ZSH} -l
+    else
+      echo "zsh not found!!!!!!!!!!"
+    fi
   fi
   
   # include .bashrc if it exists

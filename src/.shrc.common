@@ -24,16 +24,19 @@ elif [ "$TERM" = screen ]; then
 fi
 
 
-# enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
+alias ls='ls -F'
+# enable color support
+if which dircolors >/dev/null 2>&1; then
   eval "$(dircolors -b)"
-  alias ls='ls --color=auto -F'
-else
-  alias ls='ls -F'
+
+  # test color support of ls and add aliases
+  if ls --color=auto >/dev/null 2>&1; then
+    alias ls='ls --color=auto -F'
+  fi
 fi
 
 # test if grep supports color
-if grep --color=auto wat /dev/null 2> /dev/null; then
+if grep --color=auto wat /dev/null 2&>1; then
   alias grep='grep --color=auto'
 fi
 
@@ -41,8 +44,16 @@ if which less >/dev/null 2>&1; then
   export PAGER="less"
 fi
 
-if which vim >/dev/null 2>&1; then
+if which nvim >/dev/null 2>&1; then
+  export EDITOR="nvim"
+  alias vim='nvim'
+  alias vimdiff='nvim -d'
+elif which vim >/dev/null 2>&1; then
   export EDITOR="vim"
+fi
+
+if [ -f ~/.hosts ]; then
+  export HOSTALIASES="~/.hosts"
 fi
 
 # set locale
