@@ -7,16 +7,18 @@ root_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 # change to home directory
 cd
 
-# set symlinks for top level files/directories
-for file in $root_dir/src/.[a-zA-Z]*; do
-	dfile="$(basename $file)"
-	rm -rf $dfile
-	ln -s $file $dfile
+# create any missing directories
+for d in $(find ${root_dir}/src/* -type d); do
+	dir=".${d##*/src/}"
+	if [ -L $dir ]; then
+		rm $dir
+	fi
+	mkdir -p $dir
 done
-
-# set symlinks for .config files/directories
-for file in $root_dir/config_src/*; do
-	dfile=".config/$(basename $file)"
-	rm -rf $dfile
-	ln -s $file $dfile
+	
+# set symlinks for files
+for f in $(find ${root_dir}/src/* -type f,l); do
+	l=".${f##*/src/}"
+	rm -rf $l
+	ln -s $f $l
 done

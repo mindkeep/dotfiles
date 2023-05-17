@@ -6,6 +6,11 @@ This project seeks to provide a somewhat unified environment, regardless of
 whether I'm running on bash, zsh, ksh, or even dash/sh on Linux, Solaris, or
 OSX. zsh is where most of my work is done and is most feature rich.
 
+### WARNING
+
+There was a recent rename of files, which would break old symlinks created by
+ln_dotfiles. This will need to be rerun to fix the links.
+
 ## *sh env files
 
 The various .*shrc, .*profile, and .*logout files are sh specific and primarily
