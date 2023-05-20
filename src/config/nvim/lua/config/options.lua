@@ -1,0 +1,1 @@
+-- stub Lazyvim options file

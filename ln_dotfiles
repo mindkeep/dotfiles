@@ -2,7 +2,7 @@
 
 # small utility to establish relative paths to the dotfiles/src/.* files
 
-root_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+root_dir=$(CDPATH= cd -- "$(dirname -- $(realpath "$0"))" && pwd -P)
 
 # change to home directory
 cd
@@ -15,7 +15,7 @@ for d in $(find ${root_dir}/src/* -type d); do
 	fi
 	mkdir -p $dir
 done
-	
+
 # set symlinks for files
 for f in $(find ${root_dir}/src/* -type f,l); do
 	l=".${f##*/src/}"
