@@ -1,3 +1,4 @@
 return {
-	-- { "lukas-reineke/indent-blankline.nvim", enabled = false },
+	-- leap modifies keybindings and I don't like it
+	{ "ggandor/leap.nvim", enabled = false },
 }
