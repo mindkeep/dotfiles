@@ -1,4 +1,5 @@
 return {
-	-- leap modifies keybindings and I don't like it
+	-- leap and flit modify default keybindings and I don't like it
+	{ "ggandor/flit.nvim", enabled = false },
 	{ "ggandor/leap.nvim", enabled = false },
 }
