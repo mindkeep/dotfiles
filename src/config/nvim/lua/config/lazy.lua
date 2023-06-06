@@ -15,7 +15,7 @@ vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 require("lazy").setup({
 	spec = {
 		{ "LazyVim/LazyVim", import = "lazyvim.plugins" },
-		{ import = "lazyvim.plugins.extras.coding.copilot" },
+		--{ import = "lazyvim.plugins.extras.coding.copilot" },
 		{ import = "lazyvim.plugins.extras.lang.json" },
 		{ import = "lazyvim.plugins.extras.lang.go" },
 		{ import = "plugins" },
@@ -38,5 +38,8 @@ require("lazy").setup({
 				"zipPlugin",
 			},
 		},
+	},
+	ui = {
+		border = "rounded",
 	},
 })
