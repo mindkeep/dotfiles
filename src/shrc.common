@@ -35,7 +35,7 @@ if which dircolors >/dev/null 2>&1; then
 fi
 
 # test if grep supports color
-if grep --color=auto wat /dev/null 2 &>1; then
+if grep --color=auto wat /dev/null 2>&1; then
 	alias grep='grep --color=auto'
 fi
 
