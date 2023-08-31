@@ -23,6 +23,8 @@ are portable to to the other *sh implementations.
 
 .vim and .vimrc - Live and die by vi
 
+.config/nvim - Neovim config that uses LazyVim as a base
+
 .screenrc - tweaked for zsh, but other settings may be interesting to people
 
 .Xdefaults - seems to be mostly ignored these days, but common enough that I
