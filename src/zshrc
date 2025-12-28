@@ -188,5 +188,8 @@ zstyle ':completion:*' verbose yes
 
 zstyle -e ':completion:*:default' list-colors 'reply=("${PREFIX:+=(#bi)($PREFIX:t)(?)*==02=01}:${(s.:.)LS_COLORS}")'
 
+# vscode shell integration
+[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
+
 SHENV_LOG="${SHENV_LOG+$SHENV_LOG\n}.zshrc out $(date)"
 # vim: ft=zsh
