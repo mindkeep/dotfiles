@@ -9,61 +9,93 @@ SHENV_LOG="${SHENV_LOG+$SHENV_LOG\n}.bashrc in $(date)"
 
 DOTFILES=${DOTFILES:-$HOME}
 
-# do we REALLY_USE_BASH?
-if [[ -n ${REALLY_USE_BASH+xxx} ]]; then
-  echo "oh fine, we'll REALLY_USE_BASH"
-# bash is nice, but zsh is where want to be...
-else
-  ZSH=$(which zsh)
-  if [[ -n "${ZSH}" ]]; then
-    echo "switching to zsh -l"
-    export SHELL=${ZSH}
-    exec ${ZSH} -l
-  else
-    echo "zsh not found!!!!!!!!!!"
-  fi
-fi
+# holding onto this for now, but trying to switch back to bash for everyday use...
+# # do we REALLY_USE_BASH?
+# if [[ -n ${REALLY_USE_BASH+xxx} ]]; then
+#   echo "oh fine, we'll REALLY_USE_BASH"
+# # bash is nice, but zsh is where want to be...
+# else
+#   ZSH=$(which zsh)
+#   if [[ -n "${ZSH}" ]]; then
+#     echo "switching to zsh -l"
+#     export SHELL=${ZSH}
+#     exec ${ZSH} -l
+#   else
+#     echo "zsh not found!!!!!!!!!!"
+#   fi
+# fi
 
 if [ -f $DOTFILES/.shrc.common ]; then
   . $DOTFILES/.shrc.common
 fi
 
-function set_prompt {
+function __git_vcs_info {
+  # Emulate zsh vcs_info output: (git)[branch:]+
+  local branch
+  branch=$(git symbolic-ref --short HEAD 2>/dev/null) || \
+  branch=$(git rev-parse --short HEAD 2>/dev/null) || return
+
+  local unstaged=""
+  # check-for-changes: show + if there are unstaged modifications
+  if ! git diff --quiet 2>/dev/null; then
+    unstaged="+"
+  fi
+
+  printf ' (git)[%s:]%s' "$branch" "$unstaged"
+}
+
+function __set_prompt {
+  local last_exit=$?
 
   local NORMAL="\[\e[0m\]"
   local RED="\[\e[1;31m\]"
+  local DARKRED="\[\e[0;31m\]"
   local GREEN="\[\e[1;32m\]"
   local BLUE="\[\e[1;34m\]"
 
-  # Setup a red prompt for root and a green one for users.
-  if [[ $EUID == 0 ]] ; then
-    export PS1="$RED\u@\h$NORMAL:$BLUE\w$NORMAL\n# "
-    export USER="root"
-  else
-    export PS1="$GREEN\u@\h$NORMAL:$BLUE\w$NORMAL\n$ "
+  local prompt_char='\$'
+  local user_color="$GREEN"
+
+  if [[ $EUID == 0 ]]; then
+    user_color="$RED"
+    prompt_char='#'
   fi
+
+  # ret code on error (mirrors zshrc %(?..[$DARKRED%?$NORMAL]\n))
+  local ret_code=""
+  if [[ $last_exit -ne 0 ]]; then
+    ret_code="[${DARKRED}${last_exit}${NORMAL}]\n"
+  fi
+
+  # user@host:path + git vcs info
+  PS1="${ret_code}${user_color}\u@\h${NORMAL}:${BLUE}\w${NORMAL}$(__git_vcs_info)\n${prompt_char} "
 
   # set variable identifying the chroot you work in
   if [[ -z "$debian_chroot" ]] && [[ -r /etc/debian_chroot ]]; then
     debian_chroot=$(cat /etc/debian_chroot)
-    PS1="$NORMAL$debian_chroot:$PS1"
+    PS1="${NORMAL}${debian_chroot}:${PS1}"
   fi
-
-  if [[ -z "$USER" ]]; then
-    #opensolaris is stupid...
-    export USER=$LOGNAME
-  fi
-  if [[ "$TERM" == screen* ]]; then
-    export PROMPT_COMMAND='echo -ne "\033k\033\\"'
-  else
-    export PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD/$HOME/~}\007"'
-  fi
-
 }
 
-set_prompt
+# Set terminal title and rebuild prompt before each command
+function __set_title {
+  if [[ "$TERM" == screen* ]]; then
+    echo -ne "\033k\033\\"
+  else
+    echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD/$HOME/~}\007"
+  fi
+}
 
-unset set_prompt
+PROMPT_COMMAND='__set_title; __set_prompt'
+
+if [[ $EUID == 0 ]]; then
+  export USER="root"
+fi
+
+if [[ -z "$USER" ]]; then
+  # opensolaris... why?!
+  export USER=$LOGNAME
+fi
 
 # force ignoredups and ignorespace
 export HISTCONTROL=ignoreboth
