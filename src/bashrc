@@ -111,4 +111,7 @@ if [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
 fi
 
+# enable vscode shell integrations
+[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path bash)"
+
 SHENV_LOG="${SHENV_LOG+$SHENV_LOG\n}.bashrc out $(date)"
