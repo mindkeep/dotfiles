@@ -7,45 +7,50 @@ SHENV_LOG="${SHENV_LOG+$SHENV_LOG\n}.zshrc in $(date)"
 
 DOTFILES=${DOTFILES:-$HOME}
 
-if [[ -f $DOTFILES/.shrc.common ]]; then
+if [[ -f ${DOTFILES}/.shrc.common ]]; then
   setopt shwordsplit
-  . $DOTFILES/.shrc.common
+  . ${DOTFILES}/.shrc.common
   unsetopt shwordsplit
 fi
 
 function setup_prompt {
 
-    local NORMAL="%b%F{default}"
-    local RED="%B%F{red}"
-    local DARKRED="%b%F{red}"
-    local GREEN="%B%F{green}"
-    local BLUE="%B%F{blue}"
-    local NL=$'\n'
+  local NORMAL="%b%F{default}"
+  local RED="%B%F{red}"
+  local DARKRED="%b%F{red}"
+  local GREEN="%B%F{green}"
+  local BLUE="%B%F{blue}"
+  local CYAN="%B%F{cyan}"
+  local NL=$'\n'
+
+  if [ -z "${USER}" ]; then
+    #opensolaris is stupid...
+    export USER=${LOGNAME}
+  fi
+
+  local USER_COLOR="${GREEN}"
+  if [[ ${EUID} == 0 ]] ; then
+    export USER="root"
+    USER_COLOR="${RED}"
+  elif [[ "${EUID}" -lt 1000 || "$(whoami)" == *-bot ]]; then
+    USER_COLOR="${CYAN}"
+  fi
 
   # ret code on error
-  local PRINT_RET="%(?..[$DARKRED%?$NORMAL]$NL)"
-    # Setup a red prompt for root and a green one for users.
+  local PRINT_RET="%(?..[${DARKRED}%?${NORMAL}]${NL})"
+  # Setup a red prompt for root and a green one for users.
   # user@host:path
-  local HOST_PATH="%(!.$RED.$GREEN)%n@%m$NORMAL:$BLUE%~$NORMAL"
+  local HOST_PATH="${USER_COLOR}%n@%m${NORMAL}:${BLUE}%~${NORMAL}"
 
   setopt prompt_subst
   # stitch it together with vcs info
-    PS1="${PRINT_RET}${HOST_PATH}\${vcs_info_msg_0_}$NL%# "
+  PS1="${PRINT_RET}${HOST_PATH}\${vcs_info_msg_0_}${NL}%# "
 
-    if [[ $EUID == 0 ]] ; then
-        export USER="root"
-    fi
-
-    if [ -z "$USER" ]; then
-        #opensolaris is stupid...
-        export USER=$LOGNAME
-    fi
-
-    # set variable identifying the chroot you work in
-    if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
-        debian_chroot=$(cat /etc/debian_chroot)
-        PS1="$NORMAL$debian_chroot:$PS1"
-    fi
+  # set variable identifying the chroot you work in
+  if [ -z "${debian_chroot}" ] && [ -r /etc/debian_chroot ]; then
+    debian_chroot=$(cat /etc/debian_chroot)
+    PS1="${NORMAL}${debian_chroot}:${PS1}"
+  fi
 }
 
 function setup_keys {
@@ -189,7 +194,7 @@ zstyle ':completion:*' verbose yes
 zstyle -e ':completion:*:default' list-colors 'reply=("${PREFIX:+=(#bi)($PREFIX:t)(?)*==02=01}:${(s.:.)LS_COLORS}")'
 
 # vscode shell integration
-[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
+[[ "${TERM_PROGRAM}" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
 
 SHENV_LOG="${SHENV_LOG+$SHENV_LOG\n}.zshrc out $(date)"
 # vim: ft=zsh

@@ -9,21 +9,20 @@ SHENV_LOG="${SHENV_LOG+$SHENV_LOG\n}.bashrc in $(date)"
 
 DOTFILES=${DOTFILES:-$HOME}
 
-# holding onto this for now, but trying to switch back to bash for everyday use...
-# # do we REALLY_USE_BASH?
-# if [[ -n ${REALLY_USE_BASH+xxx} ]]; then
-#   echo "oh fine, we'll REALLY_USE_BASH"
-# # bash is nice, but zsh is where want to be...
-# else
-#   ZSH=$(which zsh)
-#   if [[ -n "${ZSH}" ]]; then
-#     echo "switching to zsh -l"
-#     export SHELL=${ZSH}
-#     exec ${ZSH} -l
-#   else
-#     echo "zsh not found!!!!!!!!!!"
-#   fi
-# fi
+# do we REALLY_USE_BASH?
+if [[ -n ${REALLY_USE_BASH+xxx} ]]; then
+  echo "oh fine, we'll REALLY_USE_BASH"
+# bash is nice, but zsh is where want to be...
+else
+  ZSH=$(which zsh)
+  if [[ -n "${ZSH}" ]]; then
+    echo "switching to zsh -l"
+    export SHELL=${ZSH}
+    exec ${ZSH} -l
+  else
+    echo "zsh not found!!!!!!!!!!"
+  fi
+fi
 
 if [ -f $DOTFILES/.shrc.common ]; then
   . $DOTFILES/.shrc.common
@@ -52,6 +51,7 @@ function __set_prompt {
   local DARKRED="\[\e[0;31m\]"
   local GREEN="\[\e[1;32m\]"
   local BLUE="\[\e[1;34m\]"
+  local CYAN="\[\e[1;36m\]"
 
   local prompt_char='\$'
   local user_color="$GREEN"
@@ -59,6 +59,8 @@ function __set_prompt {
   if [[ $EUID == 0 ]]; then
     user_color="$RED"
     prompt_char='#'
+  elif [[ "${EUID}" -lt 1000 || "$(whoami)" == *-bot ]]; then
+    user_color="${CYAN}"
   fi
 
   # ret code on error (mirrors zshrc %(?..[$DARKRED%?$NORMAL]\n))
