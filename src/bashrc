@@ -9,11 +9,8 @@ SHENV_LOG="${SHENV_LOG+$SHENV_LOG\n}.bashrc in $(date)"
 
 DOTFILES=${DOTFILES:-$HOME}
 
-# do we REALLY_USE_BASH?
-if [[ -n ${REALLY_USE_BASH+xxx} ]]; then
-  echo "oh fine, we'll REALLY_USE_BASH"
-# bash is nice, but zsh is where want to be...
-else
+# when chsh on work networks is broken: touch ~/.switch_to_zsh
+if [[ -f ~/.switch_to_zsh ]]; then
   ZSH=$(which zsh)
   if [[ -n "${ZSH}" ]]; then
     echo "switching to zsh -l"
