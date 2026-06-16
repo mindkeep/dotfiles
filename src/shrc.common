@@ -91,6 +91,7 @@ for _binpath in \
 		$HOME/.cargo/bin \
 		$HOME/.local/bin \
 		$HOME/.npm-global/bin \
+    $HOME/.arkade/bin \
 		$HOME/bin; do
 	if ! echo $PATH | grep -q $_binpath; then
 		if [ -d $_binpath ]; then
