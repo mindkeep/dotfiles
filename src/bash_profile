@@ -9,7 +9,7 @@ DOTFILES=${DOTFILES:-$HOME}
 # If we are running interactively
 if [[ "$-" == *i* ]]; then
 
-  # when chsh on work networks is broken: touch ~/.switch_to_zsh
+  # when chsh on corp networks is broken: touch ~/.switch_to_zsh
   if [[ -f ~/.switch_to_zsh ]]; then
     ZSH=$(which zsh)
     if [[ -n "${ZSH}" ]]; then
@@ -20,7 +20,7 @@ if [[ "$-" == *i* ]]; then
       echo "zsh not found!!!!!!!!!!"
     fi
   fi
-  
+
   # include .bashrc if it exists
   if [[ -f "$DOTFILES/.bashrc" ]]; then
     . "$DOTFILES/.bashrc"

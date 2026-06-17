@@ -9,7 +9,7 @@ SHENV_LOG="${SHENV_LOG+$SHENV_LOG\n}.bashrc in $(date)"
 
 DOTFILES=${DOTFILES:-$HOME}
 
-# when chsh on work networks is broken: touch ~/.switch_to_zsh
+# when chsh on corp networks is broken: touch ~/.switch_to_zsh
 if [[ -f ~/.switch_to_zsh ]]; then
   ZSH=$(which zsh)
   if [[ -n "${ZSH}" ]]; then
