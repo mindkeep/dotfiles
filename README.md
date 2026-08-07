@@ -33,3 +33,12 @@ included it
 .xinitrc - most display managers will ignore this, but if you ever run startx
 from a vt, this might be useful
 
+.claude/statusline.sh - status line for Claude Code, showing the model, a
+context-usage meter, and the git repo:branch each session is actually working
+in, truncated to fit the terminal. Requires jq. Nothing in it is configured by
+hand - scope and plugin badges are discovered - but it is inert until referenced
+from ~/.claude/settings.json, which is not in this repo since it carries
+account-specific settings:
+
+    "statusLine": { "type": "command", "command": "bash \"$HOME/.claude/statusline.sh\"" }
+
