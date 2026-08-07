@@ -72,6 +72,7 @@ alias scp='scp -p'
 # http://emojicons.com/table-flipping
 alias table="echo -e '(╯°□°)╯︵ ┻━┻'"
 alias untable="echo -e '┬─┬ノ(°-°ノ)'"
+alias whats_my_ip="dig -4 +short myip.opendns.com @resolver1.opendns.com"
 
 #cores
 ulimit -c unlimited
@@ -88,10 +89,11 @@ for _binpath in \
 		$HOME/.dotnet/tools \
 		$HOME/go/bin \
 		/usr/local/go/bin \
+		$HOME/.arkade/bin \
 		$HOME/.cargo/bin \
 		$HOME/.local/bin \
 		$HOME/.npm-global/bin \
-    $HOME/.arkade/bin \
+		$HOME/.pixi/bin \
 		$HOME/bin; do
 	if ! echo $PATH | grep -q $_binpath; then
 		if [ -d $_binpath ]; then
