@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
-# Claude Code statusline:  Opus 5 ━━━···· 10% (103K/1M) │ repo:branch  repo:branch
+# Claude Code statusline:  Opus 5 ━━━···· 10% (103K/1M) │ repo:🏡2⎇ branch  repo⎇ branch
+#
+# A treehouse slot renders as repo:🏡<slot>⎇ branch, dropping to repo:🏡<slot>
+# when the row is tight. Anything else is repo⎇ branch.
 #
 # Repo segments show what THIS session is actually working in, newest first,
 # derived from paths its own transcript addressed a tool at (file_path /
@@ -63,8 +66,35 @@ git_info() {
   [ -e "$g" ] || return 1
   if [ -f "$g" ]; then read -r _x GITDIR < "$g"; else GITDIR="$g"; fi
   GITCOMMON=${GITDIR%/worktrees/*}
-  read -r h < "$GITDIR/HEAD" 2>/dev/null || return 1
+  read -r h 2>/dev/null < "$GITDIR/HEAD" || return 1  # 2> first: it must cover the <
   case "$h" in "ref: refs/heads/"*) BRANCH=${h#ref: refs/heads/} ;; *) BRANCH=${h:0:7} ;; esac
+}
+
+TREE=🏡  # marks a treehouse slot; 2 cols wide, so dw() counts it
+BR="⎇ "  # precedes a branch name. Unicode calls it 1 col but fonts draw it
+         # wider, so it overhangs and eats the next char -- the trailing space
+         # absorbs that, and keeps 2 chars == 2 cols so dw() stays out of it
+
+# Treehouse slot: <root>/.treehouse/<repo>-<hash>/<n>/<repo>. The slot number is
+# where the work is happening, so it earns its place in the segment. The root is
+# relocatable (TREEHOUSE_DIR, treehouse.toml), so match the shape, not $HOME.
+th_slot() { # $1 repo root -> slot number, or nothing when it is not a slot
+  local slot pool
+  pool=${1%/*}; slot=${pool##*/}        # <n>
+  pool=${pool%/*}; pool=${pool%/*}      # <root>/.treehouse
+  [ "${pool##*/}" = .treehouse ] || return 1
+  case "$slot" in ''|*[!0-9]*) return 1 ;; esac
+  printf '%s' "$slot"
+}
+
+# Both segment forms for a repo root, using $BRANCH from git_info.
+mkseg() { # $1 repo root -> SEG_L (long) SEG_S (short)
+  local slot
+  if slot=$(th_slot "$1"); then
+    SEG_S="${1##*/}:$TREE$slot"; SEG_L="$SEG_S$BR$BRANCH"
+  else
+    SEG_S="${1##*/}$BR$BRANCH"; SEG_L="$SEG_S"
+  fi
 }
 
 # --- scope --------------------------------------------------------------------
@@ -73,11 +103,11 @@ WS=$(repo_root "$cwd") || {
 }
 
 # --- repo segments ------------------------------------------------------------
-segs=() cur="" WS_COMMON=""
+segs=() shorts=() cur="" WS_COMMON=""
 if [ -n "$WS" ]; then
   if git_info "$WS"; then
     WS_COMMON=$GITCOMMON
-    cur="${WS##*/}:$BRANCH"; segs+=("$cur")
+    mkseg "$WS"; cur=$SEG_L; segs+=("$SEG_L"); shorts+=("$SEG_S")
   fi
 
   related() { # $1 repo root, $2 its GITCOMMON -- under WS, or the same repo family
@@ -90,9 +120,9 @@ if [ -n "$WS" ]; then
     root=$(repo_root "$dir") || continue
     git_info "$root" || continue
     related "$root" "$GITCOMMON" || continue
-    s="${root##*/}:$BRANCH"
-    for seen in "${segs[@]}"; do [ "$seen" = "$s" ] && continue 2; done
-    segs+=("$s")
+    mkseg "$root"
+    for seen in "${segs[@]}"; do [ "$seen" = "$SEG_L" ] && continue 2; done
+    segs+=("$SEG_L"); shorts+=("$SEG_S")
     [ ${#segs[@]} -ge "$MAX_SEGS" ] && break
   done < <(grep -oE '"(file_path|notebook_path|cwd)":"/[^"]+' "$transcript" |
              sed 's/.*":"//' | tac | awk '!s[$0]++')
@@ -100,7 +130,8 @@ fi
 
 # --- render -------------------------------------------------------------------
 BADGE=🧩
-dw() { local n=${1//$BADGE/}; echo $(( ${#1} + ${#1} - ${#n} )); }  # 🧩 is 2 cols
+dw() { local n=${1//$BADGE/}; n=${n//$TREE/}          # 🧩 and 🏡 are 2 cols each
+       echo $(( ${#1} + ${#1} - ${#n} )); }
 
 # Plugin badges, all optional -- nothing here is required for the statusline to
 # work. Discovered, not configured: ponytail and caveman both record their mode
@@ -145,21 +176,22 @@ mid_c=$(printf '\033[38;5;110m%s\033[0m \033[38;5;%sm%s\033[0m \033[38;5;245m%s%
 
 # Full badges only if everything -- badges, meter, every repo -- fits as is.
 rep_w=0 i=0
-for s in "${segs[@]}"; do rep_w=$((rep_w + ${#s} + (i == 0 ? 3 : 2))); i=1; done
+for s in "${segs[@]}"; do rep_w=$((rep_w + $(dw "$s") + (i == 0 ? 3 : 2))); i=1; done
 if [ $(( $(dw "$bp") + $(dw "$mid_p") + rep_w )) -le $BUDGET ]; then
   out="$bc$mid_c"; len=$(( $(dw "$bp") + $(dw "$mid_p") ))
 else
   out="$cc$mid_c"; len=$(( $(dw "$cp") + $(dw "$mid_p") ))
 fi
 
-first=1
+first=1 i=0
 for s in "${segs[@]}"; do
   sep="  "; [ $first = 1 ] && sep=" │ "
-  [ $((len + ${#sep} + ${#s})) -gt $BUDGET ] && break
+  [ $((len + ${#sep} + $(dw "$s"))) -gt $BUDGET ] && s=${shorts[i]}
+  w=$(dw "$s"); [ $((len + ${#sep} + w)) -gt $BUDGET ] && break
   [ $first = 1 ] && [ -n "$cur" ] && col=150 || col=242
   out+=$(printf '\033[38;5;240m%s\033[0m\033[38;5;%sm%s\033[0m' "$sep" "$col" "$s")
-  len=$((len + ${#sep} + ${#s}))
-  first=0
+  len=$((len + ${#sep} + w))
+  first=0; i=$((i + 1))
 done
 
 printf '%s' "$out"
