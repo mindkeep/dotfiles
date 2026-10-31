@@ -42,3 +42,23 @@ account-specific settings:
 
     "statusLine": { "type": "command", "command": "bash \"$HOME/.claude/statusline.sh\"" }
 
+.claude/skills/model-routing - global skill telling Claude which model to hand
+work to via subagents: haiku for broad searches and summarizing, sonnet for
+everyday coding, opus for planning, hard debugging and reviews, fable as a last
+resort. It assumes sonnet as the session default and opus as the advisor.
+
+.claude/CLAUDE.md - global rules loaded into every Claude Code session:
+verification honesty, review before push, CI must be green, comment style.
+Project CLAUDE.md/AGENTS.md files override it.
+
+Every machine's ~/.claude/settings.json should carry this shared baseline.
+Keep machine-local choices (effortLevel, tui, notifications) out of it:
+
+    "model": "sonnet",
+    "advisorModel": "opus",
+    "statusLine": { "type": "command", "command": "bash \"$HOME/.claude/statusline.sh\"" },
+    "enabledPlugins": { "ponytail@ponytail": true },
+    "extraKnownMarketplaces": {
+      "ponytail": { "source": { "source": "github", "repo": "DietrichGebert/ponytail" } }
+    }
+
