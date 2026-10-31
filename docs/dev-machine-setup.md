@@ -1,6 +1,19 @@
 # Dev machine setup: gng-idle + dippy_ws (Ubuntu 26.04)
 
-Already installed user-local (no sudo):
+## Quick start
+
+Supported: Ubuntu 26.04 and Linux Mint (x86_64 or aarch64). Re-running is safe.
+
+```bash
+./scripts/setup-dev-tools.sh --apt --clone
+```
+
+- *(no flags)*: user-local installs only, no sudo.
+- `--apt`: system packages (clang, cmake, ninja, GTK headers, ffmpeg, podman, buildah, distrobox). Uses sudo.
+- `--clone`: clones `gng-idle` and `dippy_ws` into `~/projects` over SSH.
+- `--ros`: runs dippy_ws's own ROS 2 Lyrical setup. Uses sudo and only works on Ubuntu 26.04 / Mint 23 (resolute).
+
+The script installs these user-local tools:
 
 | Tool | Location |
 | --- | --- |
