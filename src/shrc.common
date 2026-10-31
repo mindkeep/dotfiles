@@ -94,6 +94,10 @@ for _binpath in \
 		$HOME/.local/bin \
 		$HOME/.npm-global/bin \
 		$HOME/.pixi/bin \
+		$HOME/Android/Sdk/platform-tools \
+		$HOME/Android/Sdk/cmdline-tools/latest/bin \
+		$HOME/sdk/jdk-17/bin \
+		$HOME/sdk/flutter/bin \
 		$HOME/bin; do
 	if ! echo $PATH | grep -q $_binpath; then
 		if [ -d $_binpath ]; then
@@ -102,6 +106,10 @@ for _binpath in \
 	fi
 done
 unset _binpath
+
+# Flutter / Android toolchain (user-local installs)
+[ -d $HOME/sdk/jdk-17 ] && export JAVA_HOME=$HOME/sdk/jdk-17
+[ -d $HOME/Android/Sdk ] && export ANDROID_HOME=$HOME/Android/Sdk
 
 if [ -f $DOTFILES/.shrc.$(uname -s) ]; then
 	. $DOTFILES/.shrc.$(uname -s)
